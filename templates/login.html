@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar | LacerdaFlux</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo-mark.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-brand">
+      <div class="brand brand-light"><img class="brand-logo-mark" src="{{ url_for('static', filename='logo-mark.svg') }}" alt=""><span>LacerdaFlux</span></div>
+      <div class="brand-copy">
+        <span class="eyebrow">O FLUXO DA SUA OPERAÇÃO SOB CONTROLE</span>
+        <h1>Operacao simples.<br>Decisoes melhores.</h1>
+        <p>Gerencie produtos, movimentacoes e inventarios em um unico lugar.</p>
+      </div>
+      <div class="login-stats">
+        <div><strong>100%</strong><span>online</span></div>
+        <div><strong>24/7</strong><span>disponivel</span></div>
+        <div><strong>1 tela</strong><span>para operar</span></div>
+      </div>
+    </section>
+    <section class="login-card-wrap">
+      <form method="post" class="login-card">
+        <span class="mobile-logo"><img class="brand-logo-mark" src="{{ url_for('static', filename='logo-mark.svg') }}" alt=""> LacerdaFlux</span>
+        <div>
+          <span class="eyebrow text-green">BEM-VINDO</span>
+          <h2>Acesse sua conta</h2>
+          <p>Use suas credenciais para continuar.</p>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="alert {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+        <label>E-mail<input type="email" name="email" value="admin@lacerdaflux.local" required autocomplete="email"></label>
+        <label>Senha<input type="password" name="password" value="admin123" required autocomplete="current-password"></label>
+        <button class="btn primary full" type="submit">Entrar no sistema <span>→</span></button>
+        <div class="demo-hint"><span>i</span><p><strong>Acesso de demonstração</strong><br>admin@lacerdaflux.local / admin123</p></div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
