@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">LacerdaFlux</title>
+  <desc id="desc">Monograma LF com setas representando o fluxo operacional</desc>
+  <rect width="64" height="64" rx="17" fill="#B9E4D3"/>
+  <path d="M18 15v30c0 3.3 2.7 6 6 6h22" fill="none" stroke="#153D34" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M25 22h19m0 0-7-7m7 7-7 7" fill="none" stroke="#153D34" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M29 36h14" fill="none" stroke="#1F6A57" stroke-width="6" stroke-linecap="round"/>
+</svg>
