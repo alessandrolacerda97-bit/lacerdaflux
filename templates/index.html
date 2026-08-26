@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <title>LacerdaFlux | WMS</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo-mark.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img class="brand-logo-mark" src="{{ url_for('static', filename='logo-mark.svg') }}" alt=""><span>LacerdaFlux</span></div>
+    <div class="workspace"><span class="workspace-icon">CD</span><div><small>EMPRESA</small><strong>Deposito Demo</strong></div></div>
+    <nav>
+      <button class="nav-item active" data-page="dashboard"><span>⌂</span> Visao geral</button>
+      <p>OPERACAO</p>
+      <button class="nav-item" data-page="products"><span>□</span> Produtos</button>
+      <button class="nav-item" data-page="locations"><span>⌖</span> Enderecos</button>
+      <button class="nav-item" data-page="movements"><span>⇄</span> Movimentacoes</button>
+      <button class="nav-item" data-page="inventory"><span>✓</span> Inventario</button>
+    </nav>
+    <div class="sidebar-foot"><div class="avatar">AD</div><div><strong>{{ user_name }}</strong><small>Administrador</small></div><a href="{{ url_for('logout') }}" title="Sair">↗</a></div>
+  </aside>
+
+  <main class="app-main">
+    <header class="topbar">
+      <button class="menu-button" id="menuButton">☰</button>
+      <div class="search"><span>⌕</span><input id="globalSearch" placeholder="Buscar SKU ou produto..."></div>
+      <div class="top-actions"><span class="status-dot"></span><span>Sistema online</span><button class="icon-button">◯</button></div>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="dashboard-page">
+        <div class="page-head"><div><span class="eyebrow text-green">CENTRAL DE OPERACOES</span><h1>Visao geral</h1><p>Acompanhe os principais indicadores do seu estoque.</p></div><button class="btn primary" data-open="movementModal">+ Nova movimentacao</button></div>
+        <div class="metric-grid">
+          <article class="metric-card"><div class="metric-icon green">▣</div><span>ESTOQUE TOTAL</span><strong id="metricUnits">—</strong><small>unidades armazenadas</small></article>
+          <article class="metric-card"><div class="metric-icon blue">□</div><span>SKUS ATIVOS</span><strong id="metricSkus">—</strong><small>produtos cadastrados</small></article>
+          <article class="metric-card"><div class="metric-icon amber">!</div><span>ESTOQUE BAIXO</span><strong id="metricLow">—</strong><small>requerem reposicao</small></article>
+          <article class="metric-card"><div class="metric-icon red">△</div><span>DIVERGENCIAS</span><strong id="metricDiff">—</strong><small>contagens divergentes</small></article>
+          <article class="metric-card"><div class="metric-icon purple">◷</div><span>VENCENDO</span><strong id="metricExpiry">—</strong><small>nos proximos 30 dias</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel movements-panel"><div class="panel-head"><div><h3>Movimentacoes recentes</h3><p>Ultimas alteracoes no estoque</p></div><button class="text-button" data-goto="movements">Ver todas →</button></div><div id="recentMovements" class="activity-list"></div></article>
+          <article class="panel quick-panel"><div class="panel-head"><div><h3>Acoes rapidas</h3><p>Atalhos da operacao</p></div></div><button data-open="movementModal"><span class="quick-icon">↓</span><div><strong>Registrar entrada</strong><small>Receber mercadoria</small></div><b>›</b></button><button data-open="inventoryModal"><span class="quick-icon">✓</span><div><strong>Iniciar contagem</strong><small>Realizar inventario</small></div><b>›</b></button><button data-open="productModal"><span class="quick-icon">+</span><div><strong>Novo produto</strong><small>Cadastrar um SKU</small></div><b>›</b></button></article>
+        </div>
+      </section>
+
+      <section class="page" id="products-page">
+        <div class="page-head"><div><span class="eyebrow text-green">CATALOGO</span><h1>Produtos</h1><p>Cadastre e acompanhe os SKUs da operacao.</p></div><button class="btn primary" data-open="productModal">+ Novo produto</button></div>
+        <div class="panel table-panel"><div class="table-tools"><div class="search compact"><span>⌕</span><input class="table-search" data-table="productsTable" placeholder="Buscar produto..."></div><span id="productsCount" class="count-label"></span></div><div class="table-wrap"><table id="productsTable"><thead><tr><th>SKU</th><th>PRODUTO</th><th>ENDERECO</th><th>ESTOQUE</th><th>MINIMO</th><th>STATUS</th></tr></thead><tbody></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="locations-page">
+        <div class="page-head"><div><span class="eyebrow text-green">ARMAZENAGEM</span><h1>Enderecos</h1><p>Organize as posicoes fisicas do deposito.</p></div><button class="btn primary" data-open="locationModal">+ Novo endereco</button></div>
+        <div class="panel table-panel"><div class="table-tools"><div class="search compact"><span>⌕</span><input class="table-search" data-table="locationsTable" placeholder="Buscar endereco..."></div></div><div class="table-wrap"><table id="locationsTable"><thead><tr><th>CODIGO</th><th>DESCRICAO</th><th>SKUS</th><th>UNIDADES</th><th>STATUS</th></tr></thead><tbody></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="movements-page">
+        <div class="page-head"><div><span class="eyebrow text-green">FLUXO DE ESTOQUE</span><h1>Movimentacoes</h1><p>Historico de entradas, saidas e ajustes.</p></div><button class="btn primary" data-open="movementModal">+ Nova movimentacao</button></div>
+        <div class="panel table-panel"><div class="table-wrap"><table id="movementsTable"><thead><tr><th>DATA</th><th>TIPO</th><th>SKU / PRODUTO</th><th>ENDERECO</th><th>QUANTIDADE</th><th>OBSERVACAO</th></tr></thead><tbody></tbody></table></div></div>
+      </section>
+
+      <section class="page" id="inventory-page">
+        <div class="page-head"><div><span class="eyebrow text-green">CONTAGEM CICLICA</span><h1>Inventario</h1><p>Compare o estoque fisico com o saldo do sistema.</p></div><button class="btn primary" data-open="inventoryModal">+ Nova contagem</button></div>
+        <div class="inventory-banner"><div><span>✓</span><div><strong>Contagem simplificada</strong><p>Selecione o endereco, escaneie ou escolha o SKU e informe a quantidade encontrada.</p></div></div><button class="btn light" data-open="inventoryModal">Iniciar agora</button></div>
+        <div class="panel table-panel"><div class="table-wrap"><table id="inventoryTable"><thead><tr><th>DATA</th><th>ENDERECO</th><th>SKU / PRODUTO</th><th>SISTEMA</th><th>CONTADO</th><th>DIFERENCA</th><th>OPERADOR</th></tr></thead><tbody></tbody></table></div></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal" id="productModal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow text-green">CATALOGO</span><h2>Novo produto</h2></div><button class="modal-close">×</button></div><form id="productForm"><div class="form-grid"><label>SKU<input name="sku" required placeholder="Ex.: 78945"></label><label>Unidade<select name="unit"><option>UN</option><option>KG</option><option>CX</option><option>LT</option></select></label><label class="span-2">Nome do produto<input name="name" required placeholder="Ex.: Cafe Torrado 500g"></label><label>Estoque minimo<input type="number" name="min_stock" min="0" value="0"></label><label>Custo unitario (R$)<input type="number" step="0.01" name="unit_cost" min="0" value="0"></label></div><div class="form-actions"><button type="button" class="btn ghost modal-close">Cancelar</button><button class="btn primary">Cadastrar produto</button></div></form></div></div>
+  <div class="modal" id="locationModal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow text-green">ARMAZENAGEM</span><h2>Novo endereco</h2></div><button class="modal-close">×</button></div><form id="locationForm"><div class="form-grid"><label>Codigo<input name="code" required placeholder="Ex.: A-01-02-03"></label><label>Descricao<input name="description" placeholder="Ex.: Rua A / Modulo 01"></label></div><div class="form-actions"><button type="button" class="btn ghost modal-close">Cancelar</button><button class="btn primary">Cadastrar endereco</button></div></form></div></div>
+  <div class="modal" id="movementModal"><div class="modal-card wide"><div class="modal-head"><div><span class="eyebrow text-green">ESTOQUE</span><h2>Nova movimentacao</h2></div><button class="modal-close">×</button></div><form id="movementForm"><div class="segmented"><label><input type="radio" name="type" value="ENTRY" checked><span>↓ Entrada</span></label><label><input type="radio" name="type" value="EXIT"><span>↑ Saida</span></label><label><input type="radio" name="type" value="ADJUSTMENT"><span>↕ Ajuste positivo</span></label></div><div class="form-grid"><label>Produto<select name="product_id" class="product-options" required></select></label><label>Endereco<select name="location_id" class="location-options" required></select></label><label>Quantidade<input type="number" name="quantity" min="1" required></label><label>Lote<input name="lot" placeholder="Opcional"></label><label>Validade<input type="date" name="expiry_date"></label><label>Observacao<input name="note" placeholder="Ex.: NF 1234"></label></div><div class="form-actions"><button type="button" class="btn ghost modal-close">Cancelar</button><button class="btn primary">Confirmar movimentacao</button></div></form></div></div>
+  <div class="modal" id="inventoryModal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow text-green">INVENTARIO</span><h2>Registrar contagem</h2></div><button class="modal-close">×</button></div><form id="inventoryForm"><div class="form-grid one">
+    <label>1. Posição / endereço
+      <div class="scan-field"><select name="location_id" class="location-options" required></select><button type="button" class="scan-button" data-scan="location" aria-label="Escanear posição">⌗ <span>Escanear</span></button></div>
+    </label>
+    <label>2. Produto / SKU
+      <div class="scan-field"><select name="product_id" class="product-options" required></select><button type="button" class="scan-button" data-scan="product" aria-label="Escanear SKU">⌗ <span>Escanear</span></button></div>
+    </label>
+    <div id="scannerPanel" class="scanner-panel hidden" aria-live="polite">
+      <div class="scanner-head"><div><strong id="scannerTitle">Escaneando</strong><small id="scannerStatus">Aponte a câmera para o código</small></div><button type="button" id="stopScanner" class="scanner-stop">Fechar câmera</button></div>
+      <div class="scanner-viewport"><video id="scannerVideo" playsinline muted></video><span class="scanner-line"></span></div>
+      <p>Centralize o código de barras ou QR Code dentro da área destacada.</p>
+    </div>
+    <label>3. Quantidade encontrada<input type="number" name="counted_quantity" min="0" required inputmode="numeric" placeholder="0"></label>
+  </div><div id="countResult" class="count-result hidden"></div><div class="form-actions"><button type="button" class="btn ghost modal-close">Cancelar</button><button class="btn primary">Registrar contagem</button></div></form></div></div>
+
+  <div id="toast" class="toast"></div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
