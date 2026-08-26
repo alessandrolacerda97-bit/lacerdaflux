@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: lacerdaflux
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /login
+    envVars:
+      - key: WMS_SECRET_KEY
+        generateValue: true
